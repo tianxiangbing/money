@@ -16,6 +16,10 @@ export default {
       hardSource: false,
     }],
   ],
+  exportStatic:{
+    dynamicRoot:true
+  },
+  outputPath:'./docs',
   disableCSSModules:true,
   alias:{
     utils: path.resolve(__dirname, "src/utils"),
