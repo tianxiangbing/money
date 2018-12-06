@@ -1,0 +1,43 @@
+.list{
+    width:100%;
+}
+table.list {
+    font-family: verdana,arial,sans-serif;
+    font-size:11px;
+    color:#333333;
+    border-width: 1px;
+    border-color: #999999;
+    /*为表格设置合并边框模型*/
+    border-collapse: collapse;
+    /*列宽由表格宽度和列宽度设定*/
+    table-layout: fixed;
+}
+table.list th {
+    background-color:#c3dde0;
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+table.list tr {
+    background-color:#d4e3e5;
+    &:hover{
+        background-color:#ffff66;
+    }
+}
+table.list td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+    &.red{
+        background-color:red;
+    }
+    &.green{
+        background-color:green;
+    }
+}
+.half{
+    max-height:360px;
+    overflow:auto;
+}
