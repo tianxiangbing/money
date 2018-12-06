@@ -16,9 +16,7 @@ export default {
       hardSource: false,
     }],
   ],
-  exportStatic:{
-    dynamicRoot:true
-  },
+  history:'hash',
   outputPath:'./docs',
   disableCSSModules:true,
   alias:{
