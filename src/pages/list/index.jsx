@@ -31,7 +31,7 @@ export default class List extends React.Component{
     }
     request(){
         let _this = this;
-        Jsonp('http://nuyd.eastmoney.com/EM_UBG_PositionChangesInterface/api/js?dtformat=HH:mm:ss&js=({data:[(x)],pc:(pc)})&rows=64&page=1&type=8213',{
+        Jsonp('//nuyd.eastmoney.com/EM_UBG_PositionChangesInterface/api/js?dtformat=HH:mm:ss&js=({data:[(x)],pc:(pc)})&rows=64&page=1&type=8213',{
             param:'cb'
         },function(res){
             console.log(res);
