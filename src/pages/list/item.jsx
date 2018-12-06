@@ -74,7 +74,7 @@ export default class Item extends PureComponent{
                 };
                 this.setState(data);
                 this.props.onUpdate && this.props.onUpdate(data);
-                // this.timer && this.start();
+                this.timer && this.start();
             }
         })
     }
