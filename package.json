@@ -30,6 +30,6 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "jsx-input": "0.0.5"
+    "jsx-input": "^1.1.4"
   }
 }
