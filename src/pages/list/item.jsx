@@ -82,7 +82,7 @@ export default class Item extends PureComponent {
         }
     }
     start() {
-        // this.timer = setTimeout(this.requestInfo.bind(this),10000)
+        this.timer = setTimeout(this.requestInfo.bind(this),10000)
     }
     requestInfo() {
         Jsonp('http://nuff.eastmoney.com/EM_Finance2015TradeInterface/JS.ashx?token=beb0a0047196124721f56b0f0ff5a27c&id=' + this.id, {
