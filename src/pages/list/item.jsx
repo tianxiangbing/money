@@ -65,7 +65,7 @@ export default class Item extends PureComponent {
             Jsonp('http://push2.eastmoney.com/api/qt/slist/get?ut=fa5fd1943c7b386f172d6893dbfba10b&spt=3&pi=0&pz=5&po=1&fields=f14,f3,f128,f12,f13,f100,f102,f103&secid=' + id, {
                 param: 'cb',
             }, res => {
-                console.log(res)
+                //console.log(res)
                 if (res.data) {
                     let diff = res.data.diff;
                     let arr = []
@@ -126,17 +126,17 @@ export default class Item extends PureComponent {
         this.id = code;
         return (
             <tr>
-                <td>{index}</td>
+                {/* <td>{index}</td> */}
                 <td><a target="bank" href={"http://stockpage.10jqka.com.cn/HQ_v4.html?v=_yk_2222#hs_" + code.substr(0, 6)}>{code}</a></td>
                 <td>{name}</td>
-                <td>{info}</td>
+                {/* <td>{info}</td> */}
                 <td className={this.state.zf > 0 ? 'red' : 'green'}>{this.state.zf}%</td>
                 <td>{this.state.jg}</td>
                 <td>{this.state.jk}</td>
-                <td>{this.state.zs}</td>
+                {/* <td>{this.state.zs}</td> */}
                 <td>{this.state.zg}</td>
                 <td>{this.state.zd}</td>
-                <td>{this.state.ltsz}亿</td>
+                <td>{this.state.ltsz}</td>
                 <td>{this.state.hsl}</td>
                 <td>{this.state.sy}</td>
                 <td>{this.state.lb}</td>

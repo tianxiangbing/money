@@ -2,14 +2,15 @@ import React from 'react';
 import { Jsonp } from 'utils/curry';
 import './index.less';
 import Item from './item';
-import { InputContainer, Input } from 'jsx-input';
-const NumberInput = InputContainer(Input, /[\d][a-zA-Z]*/);
+import { InputContainer, Input,InterInput  } from 'jsx-input';
 export default class List extends React.Component {
     sortBy = 1;
     hasData = false;
     constructor(props) {
         super(props);
-        let yestoday = JSON.parse(localStorage.getItem('yestoday') || "{}") || {};
+        this.today = (new Date()).toLocaleDateString();
+        this.history =  JSON.parse(localStorage.getItem('history') || "{}")
+        let yestoday = this.history[ this.today ]||{};
         if (yestoday.date) {
             let now = new Date();
             let d = new Date(yestoday.date);
@@ -19,9 +20,9 @@ export default class List extends React.Component {
             // }
         }
         this.state = {
-            date: yestoday.date || +new Date(),
+            date: yestoday.date || this.today,
             data: yestoday.data || [],
-            owner: yestoday.owner || [],
+            owner: JSON.parse(localStorage.getItem('owner')) || [],
             showdata: true,
             code: '',
             selected: []
@@ -47,7 +48,7 @@ export default class List extends React.Component {
                     }
                 }).filter(item => !/^300*/.test(item.code))
             }, () => {
-                _this.save();
+                _this.save(true);
             })
         });
     }
@@ -58,8 +59,14 @@ export default class List extends React.Component {
             this.save();
         })
     }
-    save() {
-        localStorage.setItem('yestoday', JSON.stringify(this.state));
+    save(isinit) {
+        if(isinit){
+            this.history[this.today] = this.state;
+        }else{
+            // this.history[this.today].owner = this.state.owner;
+            localStorage.setItem('owner', JSON.stringify(this.state.owner));
+        }
+        localStorage.setItem('history', JSON.stringify(this.history));
     }
     sortData(col, type) {
         let data = this.state[type];
@@ -193,6 +200,14 @@ export default class List extends React.Component {
             return b.num - a.num;
         }).map(item => <span key={item.name} className={this.state.selected.indexOf(item.name) > -1 ? 'selected' : ''} onClick={this.onSelected.bind(this, item.name)}> {item.name}({item.num}) </span>)
     }
+    renderDate=()=>{
+        return Object.values(this.history).map(item=>{
+            return <span className={this.state.date==item.date&&'selected'} onClick={this.selectDate.bind(this,item.date)}>{item.date}</span>
+        })
+    }
+    selectDate(date){
+        this.setState({data:this.history[date].data,date:date});
+    }
     onSelected(name) {
         let index = this.state.selected.indexOf(name);
         if (index > -1) {
@@ -237,35 +252,35 @@ export default class List extends React.Component {
         return (
             <div>
                 <div>
-                    <NumberInput onChange={this.onChangeHandle} placeholder="输入股票代码" />
+                    <Input className="inputCode"  onChange={this.onChangeHandle} placeholder="输入股票代码" />
                     <button onClick={this.addHandle}>新增监听</button>
                 </div>
-                <p>数据来源于前一日突破60日的均线</p>
-                <div><button className="btn" onClick={this.onFan.bind(this, 1)}>优选排序</button></div>
-                <div><button className="btn" onClick={this.onClear}>清除历史</button></div>
-                <h2>异动股行情<button onClick={this.hide.bind(this, 1)}>隐藏/显示</button></h2>
+                <p>数据来源于前一日突破60日的均线<button className="btn" onClick={this.onFan.bind(this, 1)}>优选排序</button></p>
+                {/* <div><button className="btn" onClick={this.onClear}>清除历史</button></div> */}
+                <h2><button onClick={this.hide.bind(this, 1)}>隐藏/显示</button></h2>
                 <div className="half">
                     {this.state.showdata ? <div>
+                    <div className="bkList">日期:{this.renderDate()}</div>
                         <div className="bkList">板块：{this.renderBk()}</div>
                         <table className="list">
                             <thead>
                                 <tr>
-                                    <td width="30">序号</td>
-                                    <td>代码</td>
-                                    <td>名称</td>
-                                    <td>信息</td>
-                                    <td onClick={this.sortData.bind(this, 'zf', 'data')}>涨幅</td>
-                                    <td>价格</td>
-                                    <td>今开</td>
-                                    <td>昨收</td>
-                                    <td>最高</td>
-                                    <td>最低</td>
-                                    <td onClick={this.sortData.bind(this, 'ltsz', 'data')} >流通</td>
-                                    <td onClick={this.sortData.bind(this, 'hsl', 'data')}>换手率</td>
-                                    <td onClick={this.sortData.bind(this, 'sy', 'data')}>市盈</td>
-                                    <td onClick={this.sortData.bind(this, 'lb', 'data')}>量比</td>
-                                    <td>板块</td>
-                                    <td>操作</td>
+                                    {/* <td width="30">序号</td> */}
+                                    <td width="50">代码</td>
+                                    <td width="55">名称</td>
+                                    {/* <td>信息</td> */}
+                                    <td width="40" onClick={this.sortData.bind(this, 'zf', 'data')}>涨幅</td>
+                                    <td width="40">价格</td>
+                                    <td width="40">今开</td>
+                                    {/* <td>昨收</td> */}
+                                    <td width="40">最高</td>
+                                    <td width="40">最低</td>
+                                    <td width="50" onClick={this.sortData.bind(this, 'ltsz', 'data')} >流通亿</td>
+                                    <td width="40" onClick={this.sortData.bind(this, 'hsl', 'data')}>换手率</td>
+                                    <td width="40" onClick={this.sortData.bind(this, 'sy', 'data')}>市盈</td>
+                                    <td width="40" onClick={this.sortData.bind(this, 'lb', 'data')}>量比</td>
+                                    <td >板块</td>
+                                    <td width="65">操作</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -279,22 +294,22 @@ export default class List extends React.Component {
                 <table className="list">
                     <thead>
                         <tr>
-                            <td width="30">序号</td>
-                            <td>代码</td>
-                            <td>名称</td>
-                            <td>信息</td>
-                            <td onClick={this.sortData.bind(this, 'zf', 'owner')}>涨幅</td>
-                            <td>价格</td>
-                            <td>今开</td>
-                            <td>昨收</td>
-                            <td>最高</td>
-                            <td>最低</td>
-                            <td onClick={this.sortData.bind(this, 'ltsz', 'data')} >流通</td>
-                            <td onClick={this.sortData.bind(this, 'hsl', 'owner')}>换手率</td>
-                            <td onClick={this.sortData.bind(this, 'sy', 'owner')}>市盈</td>
-                            <td onClick={this.sortData.bind(this, 'lb', 'owner')}>量比</td>
-                            <td>板块</td>
-                            <td>操作</td>
+                            {/* <td width="30">序号</td> */}
+                            <td width="50">代码</td>
+                            <td width="55">名称</td>
+                            {/* <td>信息</td> */}
+                            <td width="40" onClick={this.sortData.bind(this, 'zf', 'owner')}>涨幅</td>
+                            <td width="40">价格</td>
+                            <td width="40">今开</td>
+                            {/* <td>昨收</td> */}
+                            <td width="40">最高</td>
+                            <td width="40">最低</td>
+                            <td width="50" onClick={this.sortData.bind(this, 'ltsz', 'data')} >流通亿</td>
+                            <td width="40" onClick={this.sortData.bind(this, 'hsl', 'owner')}>换手率</td>
+                            <td width="40" onClick={this.sortData.bind(this, 'sy', 'owner')}>市盈</td>
+                            <td width="40" onClick={this.sortData.bind(this, 'lb', 'owner')}>量比</td>
+                            <td >板块</td>
+                            <td width="65">操作</td>
                         </tr>
                     </thead>
                     <tbody>
