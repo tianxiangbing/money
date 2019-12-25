@@ -54,7 +54,10 @@ export default class List extends React.Component {
     }
     addHandle = () => {
         let d = this.state.owner;
-        d.push({ code: this.state.code })
+        let codes = this.state.code.replace(/[\'\"]/gi,'').split(/[\,\s]+/);
+        codes.forEach(item=>{
+            d.push({ code: item })
+        })
         this.setState({ owner: d }, () => {
             this.save();
         })
