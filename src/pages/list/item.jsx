@@ -1,5 +1,6 @@
 import { PureComponent } from 'react';
 import { Jsonp } from 'utils/curry';
+import { InputContainer, Input,InterInput  } from 'jsx-input';
 export default class Item extends PureComponent {
     timer = null;
     id = 0;
@@ -25,7 +26,8 @@ export default class Item extends PureComponent {
             hsl,
             sy,
             lb,
-            bk
+            bk,
+            cb
         } = props.data;
         this.state = {
             zf,
@@ -38,13 +40,19 @@ export default class Item extends PureComponent {
             hsl,
             sy,
             lb,
-            bk
+            bk,
+            cb
         }
     }
     componentWillUnmount() {
         if (this.timer) {
             clearTimeout(this.timer);
             this.timer = null;
+        }
+    }
+    componentWillReceiveProps(props){
+        if(props.data.cb){
+            this.setState({cb :props.data.cb});
         }
     }
     componentDidMount() {
@@ -124,14 +132,32 @@ export default class Item extends PureComponent {
     DelOwner = (code) => {
         this.props.action('delowner', this.id)
     }
+    
+    cbChange=(v)=>{
+        this.props.action('updatecb',this.id,v)
+    }
     render() {
         let { data, index } = this.props;
         let { code, name, info } = data;
         this.id = code;
+        let yk='';
+        let cb = this.state.cb;
+        if(cb){
+            yk = -(((cb - this.state.jg)/cb)*100).toFixed(2);
+        }
         return (
             <tr>
                 {/* <td>{index}</td> */}
-                <td><a target="bank" href={"http://stockpage.10jqka.com.cn/HQ_v4.html?v=_yk_2222#hs_" + code.substr(0, 6)}>{code}</a></td>
+                <td><a target="bank" href={"http://stockpage.10jqka.com.cn/HQ_v4.html?v=_yk_2222#hs_" + code.substr(0, 6)}>{code}</a>
+                </td>
+                {this.props.type ==='data'?
+                    undefined:
+                    <td>
+                        <nobr>
+                            <Input className="txt_cb" placeholder="成本价" type="text" onChange={this.cbChange} value={cb}/>{yk}%
+                        </nobr>
+                    </td>
+                }
                 <td>{name}</td>
                 {/* <td>{info}</td> */}
                 <td className={this.state.zf > 0 ? 'red' : 'green'}>{this.state.zf}%</td>

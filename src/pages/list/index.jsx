@@ -163,7 +163,7 @@ export default class List extends React.Component {
             arr.splice(index, 1);
         }
     }
-    action = (source, type, code) => {
+    action = (source, type, code,v) => {
         let data = this.state[source];
         if (type === 'del') {
             this.remove(data, (d) => {
@@ -186,6 +186,16 @@ export default class List extends React.Component {
                 return d.code === code;
             })
             this.setState({ owner: data }, () => {
+                this.save();
+            });
+        }
+        
+        if(type==='updatecb'){
+            data = this.state.owner;
+            let arr = data.filter(item=>item.code ==code);
+            arr[0].cb = v;
+            // this.save();
+            this.setState({owner:data},()=>{
                 this.save();
             });
         }
@@ -246,7 +256,7 @@ export default class List extends React.Component {
             // console.log('00000000000000::::::::',index)
             let hasOwner = this.state.owner.filter(it => it.code === item.code).length;
             return (
-                <Item action={this.action.bind(this, 'data')} hasOwner={hasOwner} key={item.code} index={index} data={item} onUpdate={this.onUpdate.bind(this, index, 'data')} />
+                <Item type="data" action={this.action.bind(this, 'data')} hasOwner={hasOwner} key={item.code} index={index} data={item} onUpdate={this.onUpdate.bind(this, index, 'data')} />
             )
         })
         return arr;
@@ -299,6 +309,7 @@ export default class List extends React.Component {
                         <tr>
                             {/* <td width="30">序号</td> */}
                             <td width="50">代码</td>
+                            <td width="100">盈收</td>
                             <td width="55">名称</td>
                             {/* <td>信息</td> */}
                             <td width="40" onClick={this.sortData.bind(this, 'zf', 'owner')}>涨幅</td>
@@ -319,7 +330,7 @@ export default class List extends React.Component {
                         {
                             this.state.owner.map((item, index) => {
                                 return (
-                                    <Item action={this.action.bind(this, 'owner')} hasOwner={true} key={item.code + 'o' + index} index={index} data={item} onUpdate={this.onUpdate.bind(this, index, 'owner')} />
+                                    <Item type="owner" action={this.action.bind(this, 'owner')} hasOwner={true} key={item.code + 'o' + index} index={index} data={item} onUpdate={this.onUpdate.bind(this, index, 'owner')} />
                                 )
                             })
                         }
