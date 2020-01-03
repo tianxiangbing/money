@@ -281,7 +281,7 @@ export default class List extends React.Component {
                                     {/* <td width="30">序号</td> */}
                                     <td width="50">代码</td>
                                     <td width="55">名称</td>
-                                    {/* <td>信息</td> */}
+                                    <td width="75">自选价格</td>
                                     <td width="40" onClick={this.sortData.bind(this, 'zf', 'data')}>涨幅</td>
                                     <td width="40">价格</td>
                                     <td width="40">今开</td>
@@ -311,6 +311,7 @@ export default class List extends React.Component {
                             <td width="50">代码</td>
                             <td width="100">盈收</td>
                             <td width="55">名称</td>
+                            <td width="75">自选价格</td>
                             {/* <td>信息</td> */}
                             <td width="40" onClick={this.sortData.bind(this, 'zf', 'owner')}>涨幅</td>
                             <td width="40">价格</td>

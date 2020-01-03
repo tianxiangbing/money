@@ -27,7 +27,8 @@ export default class Item extends PureComponent {
             sy,
             lb,
             bk,
-            cb
+            cb,
+            selectPrice
         } = props.data;
         this.state = {
             zf,
@@ -41,7 +42,8 @@ export default class Item extends PureComponent {
             sy,
             lb,
             bk,
-            cb
+            cb,
+            selectPrice
         }
     }
     componentWillUnmount() {
@@ -97,24 +99,34 @@ export default class Item extends PureComponent {
         if(this.id.length ===6){
             /^6/.test(this.id) ? code =code+'1':code =code+'2';
         }
-        Jsonp('http://nuff.eastmoney.com/EM_Finance2015TradeInterface/JS.ashx?token=beb0a0047196124721f56b0f0ff5a27c&id=' +code, {
+        
+        let id = '';
+        if (id == 7) {
+            id = (this.id.substr(5, 1) == "1" ? "1" : '0') + '.' + this.id.substr(0, 6)
+        } else {
+            id = (this.id.substr(0, 1) == "0" ? "0" : '1') + '.' + this.id.substr(0, 6)
+        }
+        //'http://nuff.eastmoney.com/EM_Finance2015TradeInterface/JS.ashx?token=beb0a0047196124721f56b0f0ff5a27c&id=' +code
+        let url =`http://push2.eastmoney.com/api/qt/stock/get?ut=fa5fd1943c7b386f172d6893dbfba10b&invt=2&fltt=2&fields=f43,f57,f58,f169,f170,f46,f44,f51,f168,f47,f164,f163,f116,f60,f45,f52,f50,f48,f167,f117,f71,f161,f49,f530,f135,f136,f137,f138,f139,f141,f142,f144,f145,f147,f148,f140,f143,f146,f149,f55,f62,f162,f92,f173,f104,f105,f84,f85,f183,f184,f185,f186,f187,f188,f189,f190,f191,f192,f107,f111,f86,f177,f78,f110,f262,f263,f264,f267,f268,f250,f251,f252,f253,f254,f255,f256,f257,f258,f266,f269,f270,f271,f273,f274,f275,f127,f199,f128,f193,f196,f194,f195,f197,f80,f280,f281,f282,f284,f285,f286,f287&secid=${id}&_=1578016748760`
+        Jsonp(url, {
             param: 'cb',
         }, res => {
             // console.log(res)
-            let arr = res.Value;
-            if (arr[29]) {
+            let arr = res.data;
+            if (arr['f46']) {
                 let data = {
-                    zf: arr[29],
-                    jg: arr[8],
-                    jk: arr[28],
-                    zs: arr[34],
-                    zg: arr[30],
-                    zd: arr[32],
-                    ltsz: Number(arr[45] / 10000 / 10000).toFixed(2),
-                    hsl: arr[37],
-                    sy: arr[38],
-                    lb: arr[36],
-                    name: arr[2]
+                    zf: arr['f170'],
+                    jg: arr['f35'],
+                    jk: arr['f46'],
+                    zs: arr['f60'],
+                    zg: arr['f44'],
+                    zd: arr['f45'],
+                    ltsz: Number(arr['f117'] / 10000 / 10000).toFixed(2),
+                    hsl: arr['f168'],
+                    sy: arr['f162'],
+                    lb: arr['f50'],
+                    name: arr['f58'],
+                    selectPrice:this.state.selectPrice ||arr['f35']
                 };
                 let olst = Object.assign(this.state, data);
                 this.setState(olst);
@@ -138,13 +150,14 @@ export default class Item extends PureComponent {
     }
     render() {
         let { data, index } = this.props;
-        let { code, name, info } = data;
+        let { code, name, info,selectPrice } = data;
         this.id = code;
         let yk='';
         let cb = this.state.cb;
         if(cb){
             yk = -(((cb - this.state.jg)/cb)*100).toFixed(2);
         }
+        let zxyk =  -(((selectPrice - this.state.jg)/selectPrice)*100).toFixed(2);
         return (
             <tr>
                 {/* <td>{index}</td> */}
@@ -159,7 +172,7 @@ export default class Item extends PureComponent {
                     </td>
                 }
                 <td>{name}</td>
-                {/* <td>{info}</td> */}
+                <td>{selectPrice}({zxyk}%)</td>
                 <td className={this.state.zf > 0 ? 'red' : 'green'}>{this.state.zf}%</td>
                 <td>{this.state.jg}</td>
                 <td>{this.state.jk}</td>
