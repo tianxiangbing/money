@@ -116,7 +116,7 @@ export default class Item extends PureComponent {
             if (arr['f46']) {
                 let data = {
                     zf: arr['f170'],
-                    jg: arr['f35'],
+                    jg: arr['f43'],
                     jk: arr['f46'],
                     zs: arr['f60'],
                     zg: arr['f44'],
