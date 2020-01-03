@@ -268,7 +268,7 @@ export default class List extends React.Component {
                     <Input className="inputCode"  onChange={this.onChangeHandle} placeholder="输入股票代码" />
                     <button onClick={this.addHandle}>新增监听</button>
                 </div>
-                <p>数据来源于前一日突破60日的均线<button className="btn" onClick={this.onFan.bind(this, 1)}>优选排序</button></p>
+                <p>数据来源于前一日突破60日的均线<button className="btn" onClick={this.onFan.bind(this, 1)}>优选排序</button><button className="btn" onClick={this.request.bind(this)} title="刷新">刷新</button></p>
                 {/* <div><button className="btn" onClick={this.onClear}>清除历史</button></div> */}
                 <h2><button onClick={this.hide.bind(this, 1)}>隐藏/显示</button></h2>
                 <div className="half">
